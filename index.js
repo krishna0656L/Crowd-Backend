@@ -1,4 +1,7 @@
-require('dotenv').config();
+// Load .env only in non-production to avoid picking up local .env on Render
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
