@@ -10,13 +10,20 @@ export PYTHON_PORT=${PYTHON_PORT:-10000}
 export FLASK_ENV=${FLASK_ENV:-production}
 export FLASK_APP=${FLASK_APP:-app.py}
 
+# Add Python user bin to PATH if it exists
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
 # Log function
 log() {
   echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
-# Create logs directory if it doesn't exist
-mkdir -p logs
+# Create logs directory and ensure it's writable
+LOG_DIR="logs"
+mkdir -p "$LOG_DIR"
+chmod 777 "$LOG_DIR" || true  # Continue even if chmod fails (e.g., on Windows)
 
 # Start Node.js server in the background
 log "Starting Node.js server on port $PORT..."
@@ -26,7 +33,8 @@ log "Node.js server started with PID: $NODE_PID"
 
 # Start Python server in the background
 log "Starting Python server on port $PYTHON_PORT..."
-gunicorn app:app -c gunicorn_config.py > logs/python.log 2>&1 &
+# Use python -m gunicorn to ensure we're using the correct Python environment
+python -m gunicorn app:app -c gunicorn_config.py > logs/python.log 2>&1 &
 PYTHON_PID=$!
 log "Python server started with PID: $PYTHON_PID"
 
