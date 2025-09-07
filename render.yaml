@@ -6,18 +6,40 @@ services:
     build:
       os: ubuntu22.04
     envVars:
+      # Server Configuration
       - key: PORT
         value: 10000
       - key: PYTHON_PORT
         value: 10000
       - key: NODE_ENV
         value: production
+      - key: PYTHON_VERSION
+        value: 3.9.6
+      - key: NODE_VERSION
+        value: 18.x
+      
+      # Python Configuration
       - key: FLASK_ENV
         value: production
       - key: FLASK_APP
         value: app.py
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+      
+      # Supabase Configuration (replace with your actual values)
+      - key: SUPABASE_URL
+        value: your_supabase_url
+      - key: SUPABASE_ANON_KEY
+        value: your_supabase_anon_key
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: your_supabase_service_role_key
+      
+      # JWT Configuration
+      - key: JWT_SECRET
+        value: your_secure_jwt_secret
     buildCommand: |
-      pip install -r requirements.txt
-      npm install --production=false
-      chmod +x start.sh
+      chmod +x setup.sh
+      ./setup.sh
     startCommand: ./start.sh
