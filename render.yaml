@@ -5,10 +5,6 @@ services:
     region: oregon  # Choose the region closest to your users
     build:
       os: ubuntu22.04
-      commands:
-        - pip install -r requirements.txt
-        - npm install --production=false  # Install all dependencies including devDependencies
-        - npm install -g concurrently   # Ensure globally available
     envVars:
       - key: PORT
         value: 10000
