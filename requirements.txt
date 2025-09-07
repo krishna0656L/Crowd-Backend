@@ -7,12 +7,13 @@ requests==2.31.0
 # Web Server
 gunicorn==21.2.0
 
-# Data Processing - using older, more stable versions
-numpy==1.24.3
-scikit-learn==1.2.2
+# Data Processing (Python 3.13 compatible)
+numpy>=2.1.2,<3
+scikit-learn>=1.5.1,<2
 
-# Image Processing - simplified
+# Image Processing
 opencv-python-headless==4.8.1.78
-pillow==9.5.0
+# Pillow will be provided by torchvision if needed; keep a compatible upper bound
+pillow>=11.0.0,<12
 
 # PyTorch will be installed separately in build command
