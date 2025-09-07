@@ -49,11 +49,22 @@ async function createServer() {
     });
   });
 
-  const PORT = parseInt(process.env.PORT || '3000', 10);
+  const PORT = parseInt(process.env.PORT || '10000', 10);
   const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Node.js server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`Python server will run on port: ${process.env.PYTHON_PORT || 10000}`);
+    console.log(`🚀 Node.js server running on port ${PORT}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🐍 Python server will run on port: ${process.env.PYTHON_PORT || '10000'}`);
+    console.log(`💡 Health check at: http://localhost:${PORT}/health`);
+  });
+
+  // Handle server errors
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`❌ Port ${PORT} is already in use`);
+    } else {
+      console.error('❌ Server error:', error);
+    }
+    process.exit(1);
   });
 
   // Handle process termination
