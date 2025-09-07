@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"node index.js\" \"gunicorn app:app -c gunicorn_config.py\"",
-    "build": "pip install -r requirements.txt && npm install",
-    "dev": "concurrently \"nodemon index.js\" \"python3 app.py\"",
+    "start": "./start.sh",
+    "build": "pip install -r requirements.txt && npm install --production=false",
+    "dev": "npx concurrently \"nodemon index.js\" \"python3 app.py\"",
     "dev:node": "nodemon index.js",
     "dev:python": "python3 app.py"
   },
@@ -17,12 +17,12 @@
     "@supabase/supabase-js": "^2.57.2",
     "@types/uuid": "^10.0.0",
     "bcryptjs": "^3.0.2",
+    "concurrently": "^9.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.1",
-    "pg": "^8.16.3",
     "uuid": "^12.0.0"
   },
   "devDependencies": {
