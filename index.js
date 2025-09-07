@@ -2,6 +2,27 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+
+// If DB is disabled, proactively prevent any 'pg' usage and unset DATABASE_URL
+if (process.env.SKIP_DB === '1') {
+  try {
+    // Ensure no code accidentally sees a DATABASE_URL
+    delete process.env.DATABASE_URL;
+    // Monkey-patch module loader to neutralize 'pg' imports
+    const Module = require('module');
+    const originalLoad = Module._load;
+    Module._load = function(request, parent, isMain) {
+      if (request === 'pg') {
+        console.log('ℹ️ SKIP_DB=1: Suppressing require("pg")');
+        return {};
+      }
+      return originalLoad.apply(this, arguments);
+    };
+    console.log('ℹ️ SKIP_DB=1 set: PostgreSQL access disabled');
+  } catch (e) {
+    console.warn('Warning: failed to apply SKIP_DB guard:', e);
+  }
+}
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
