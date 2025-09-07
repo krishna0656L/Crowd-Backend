@@ -3,6 +3,12 @@
 # Exit on any error
 set -e
 
+# Install Node.js dependencies if node_modules is missing
+if [ ! -d "node_modules" ]; then
+    echo "Installing Node.js dependencies..."
+    npm install --production
+fi
+
 # Set default environment variables
 export NODE_ENV=${NODE_ENV:-production}
 export PORT=${PORT:-10000}
