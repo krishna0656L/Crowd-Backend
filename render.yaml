@@ -5,19 +5,39 @@ services:
     region: oregon
     plan: free
     buildCommand: |
+      # Install Python dependencies
       python -m pip install --upgrade pip setuptools wheel
       pip install --no-cache-dir torch==2.1.2+cpu torchvision==0.16.2+cpu --index-url https://download.pytorch.org/whl/cpu
       pip install --no-cache-dir -r requirements.txt
-      npm install
+      
+      # Install Node.js dependencies
+      npm install --production
     startCommand: ./start.sh
     envVars:
+      # Server Configuration
       - key: PORT
         value: 10000
       - key: PYTHON_PORT
         value: 10000
       - key: NODE_ENV
         value: production
+      
+      # Python Configuration
       - key: FLASK_ENV
         value: production
       - key: FLASK_APP
         value: app.py
+      - key: PYTHONUNBUFFERED
+        value: 1
+      
+      # Supabase Configuration (replace with your actual values)
+      - key: SUPABASE_URL
+        value: your_supabase_url_here
+      - key: SUPABASE_ANON_KEY
+        value: your_supabase_anon_key_here
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: your_supabase_service_role_key_here
+      
+      # JWT Configuration
+      - key: JWT_SECRET
+        value: your_jwt_secret_here
