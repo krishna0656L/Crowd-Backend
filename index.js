@@ -6,32 +6,16 @@ const path = require('path');
 async function createServer() {
   const app = express();
 
-  // Parse JSON bodies first
+  // Basic middleware
   app.use(express.json());
-
-  // CORS configuration
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    
-    // Handle preflight requests
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
-    
-    next();
-  });
+  app.use(cors({
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true
+  }));
 
   // Health check endpoint
   app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
-  });
-
-  // Simple test endpoint
-  app.get('/test', (req, res) => {
-    res.json({ message: 'Test endpoint is working!' });
   });
 
   // Import routes
@@ -65,12 +49,11 @@ async function createServer() {
     });
   });
 
-  // Using 3001 to avoid conflicts with AirPlay and other services
-  const PORT = process.env.PORT || 3001;
-  const HOST = '0.0.0.0';
-  const server = app.listen(PORT, HOST, () => {
-    console.log(`Server running on http://${HOST}:${PORT}`);
+  const PORT = parseInt(process.env.PORT || '3000', 10);
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Node.js server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Python server will run on port: ${process.env.PYTHON_PORT || 10000}`);
   });
 
   // Handle process termination
