@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: crowd-backend
+    env: python
+    region: oregon  # Choose the region closest to your users
+    build:
+      os: ubuntu22.04
+      commands:
+        - pip install -r requirements.txt
+        - npm install
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHON_PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_APP
+        value: app.py
+    buildCommand: npm run build
+    startCommand: npm start
