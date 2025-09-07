@@ -32,6 +32,10 @@ LOG_DIR="logs"
 mkdir -p "$LOG_DIR"
 chmod 777 "$LOG_DIR" || true  # Continue even if chmod fails (e.g., on Windows)
 
+# Clear old logs to avoid surfacing stale errors on restart
+: > logs/node.log || true
+: > logs/python.log || true
+
 # Start Node.js server in the background
 start_node() {
   log "Starting Node.js server on port $PORT..."
@@ -49,7 +53,14 @@ start_python() {
   PYTHON_PID=$!
   log "Python server started with PID: $PYTHON_PID"
 }
-start_python
+
+# Optionally skip starting Python (e.g., when no egress/network)
+if [ "${SKIP_PY}" = "1" ]; then
+  log "SKIP_PY=1 set: skipping Python server startup"
+  PYTHON_PID=""
+else
+  start_python
+fi
 
 # Function to check if process is running
 is_running() {
@@ -76,7 +87,7 @@ while true; do
     start_node
   fi
   
-  if ! is_running $PYTHON_PID; then
+  if [ -n "$PYTHON_PID" ] && ! is_running $PYTHON_PID; then
     log "Python server (PID: $PYTHON_PID) is not running. Attempting restart..."
     tail -n 100 logs/python.log || true
     start_python
