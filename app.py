@@ -85,4 +85,6 @@ def detect_image():
     return jsonify({'crowdCount': person_count})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get('PYTHON_PORT', 10000))
+    app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')
