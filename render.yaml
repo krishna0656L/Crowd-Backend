@@ -7,7 +7,8 @@ services:
       os: ubuntu22.04
       commands:
         - pip install -r requirements.txt
-        - npm install
+        - npm install --production=false  # Install all dependencies including devDependencies
+        - npm install -g concurrently   # Ensure globally available
     envVars:
       - key: PORT
         value: 10000
@@ -19,5 +20,8 @@ services:
         value: production
       - key: FLASK_APP
         value: app.py
-    buildCommand: npm run build
-    startCommand: npm start
+    buildCommand: |
+      pip install -r requirements.txt
+      npm install --production=false
+      chmod +x start.sh
+    startCommand: ./start.sh
