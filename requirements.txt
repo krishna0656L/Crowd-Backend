@@ -11,8 +11,8 @@ gunicorn==21.2.0
 numpy>=2.1.2,<3
 scikit-learn>=1.5.1,<2
 
-# Image Processing
-opencv-python-headless==4.8.1.78
+# Image Processing (OpenCV >=4.10 is compatible with NumPy 2)
+opencv-python-headless>=4.10.0,<5
 # Pillow will be provided by torchvision if needed; keep a compatible upper bound
 pillow>=11.0.0,<12
 
