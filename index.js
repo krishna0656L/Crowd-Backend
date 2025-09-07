@@ -64,8 +64,13 @@ async function createServer() {
     } else {
       console.error('❌ Server error:', error);
     }
-    process.exit(1);
+    // Do not exit; keep process alive to allow Render to keep the instance running
   });
+
+  // Optional: inform logs that DB is skipped in IPv6-only envs
+  if (process.env.SKIP_DB === '1') {
+    console.log('ℹ️ SKIP_DB=1 set: skipping any direct database connection attempts');
+  }
 
   // Handle process termination
   process.on('SIGTERM', () => {
@@ -76,16 +81,14 @@ async function createServer() {
     });
   });
 
-  // Handle unhandled rejections
+  // Handle unhandled rejections - log but do not exit to keep service alive
   process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection:', err);
-    server.close(() => process.exit(1));
+    console.error('Unhandled Rejection (logged, continuing):', err);
   });
 
-  // Handle uncaught exceptions
+  // Handle uncaught exceptions - log but do not exit to keep service alive
   process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
-    server.close(() => process.exit(1));
+    console.error('Uncaught Exception (logged, continuing):', err);
   });
 
   return { app, server };
