@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run start:node\" \"npm run start:python\"",
-    "start:node": "node index.js",
-    "start:python": "python3 app.py || (echo 'Python server failed to start' && exit 1)",
-    "dev": "concurrently \"npm run dev:node\" \"npm run dev:python\"",
+    "start": "concurrently \"node index.js\" \"gunicorn app:app -c gunicorn_config.py\"",
+    "build": "pip install -r requirements.txt && npm install",
+    "dev": "concurrently \"nodemon index.js\" \"python3 app.py\"",
     "dev:node": "nodemon index.js",
-    "dev:python": "python3 app.py || (echo 'Python server failed to start' && exit 1)"
+    "dev:python": "python3 app.py"
   },
   "keywords": [],
   "author": "",
