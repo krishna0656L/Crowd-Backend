@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon --inspect index.js",
-    "test": "NODE_ENV=test node -r dotenv/config -r dotenv-expand/config jest --forceExit --detectOpenHandles",
-    "test:watch": "NODE_ENV=test node -r dotenv/config -r dotenv-expand/config jest --watch",
-    "test:ci": "NODE_ENV=test node -r dotenv/config -r dotenv-expand/config jest --ci --runInBand --coverage",
-    "debug": "node --inspect index.js"
+    "start": "concurrently \"npm run start:node\" \"npm run start:python\"",
+    "start:node": "node index.js",
+    "start:python": "python3 app.py || (echo 'Python server failed to start' && exit 1)",
+    "dev": "concurrently \"npm run dev:node\" \"npm run dev:python\"",
+    "dev:node": "nodemon index.js",
+    "dev:python": "python3 app.py || (echo 'Python server failed to start' && exit 1)"
   },
   "keywords": [],
   "author": "",
